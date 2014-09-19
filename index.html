@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>My Octopress Blog</title>
-  <meta name="author" content="Your Name">
+  <title>eMxyzptlk</title>
+  <meta name="author" content="Wael Nasreddine">
 
   
-  <meta name="description" content=" Blog Archives Recent Posts ">
+  <meta name="description" content="After a few years in the dark, my blog has just been re-opened. It has been so long since my last blog entry that my life has took a turn to a very &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +21,7 @@
   <link rel="canonical" href="http://eMxyzptlk.github.io">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="eMxyzptlk" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -31,14 +31,26 @@
 <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-18696924-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">My Octopress Blog</a></h1>
+  <h1><a href="/">eMxyzptlk</a></h1>
   
-    <h2>A blogging framework for hackers.</h2>
+    <h2>My hacker blog</h2>
   
 </hgroup>
 
@@ -66,6 +78,42 @@
       <div class="blog-index">
   
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/09/18/blog-re-opened/">Blog Re-opened</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-18T12:18:41-07:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>18</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:18 pm</span></time>
+        
+           | <a href="/blog/2014/09/18/blog-re-opened/#disqus_thread"
+             data-disqus-identifier="http://eMxyzptlk.github.io/blog/2014/09/18/blog-re-opened/">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>After a few years in the dark, my blog has just been re-opened. It has been so long since my last blog entry that my life has took a turn to a very different yet exciting new path.</p>
+
+<p>I am currently working at Google, as an SRE and most my daily basis work involves system troubleshooting. On the other hand, I&rsquo;ve fallen in love with Go and it&rsquo;s where I spend most of my free time.</p>
+
+<p>I&rsquo;ll be blogging a lot about systems and system administration, but I will also share everything that I know and will know about Go, so stay tuned!</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
@@ -78,10 +126,52 @@
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
+      <li class="post">
+        <a href="/blog/2014/09/18/blog-re-opened/">Blog Re-opened</a>
+      </li>
+    
   </ul>
 </section>
 
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/eMxyzptlk">@eMxyzptlk</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
 
+        github.showRepos({
+            user: 'eMxyzptlk',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/+WaelNasreddine?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
 
 
 
@@ -91,16 +181,37 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Your Name -
+  Copyright &copy; 2014 - Wael Nasreddine -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
 </footer>
   
 
+<script type="text/javascript">
+      var disqus_shortname = 'emxyzptlk';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
 
 
 
