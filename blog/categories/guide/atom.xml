@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Guide | eMxyzptlk]]></title>
+  <link href="http://eMxyzptlk.github.io/blog/categories/guide/atom.xml" rel="self"/>
+  <link href="http://eMxyzptlk.github.io/"/>
+  <updated>2014-10-11T16:52:55-07:00</updated>
+  <id>http://eMxyzptlk.github.io/</id>
+  <author>
+    <name><![CDATA[Wael Nasreddine]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Migrating Emails From Yahoo SMB to Google Apps]]></title>
+    <link href="http://eMxyzptlk.github.io/blog/2014/10/11/migrating-emails-from-yahoo-smb--to-google-apps/"/>
+    <updated>2014-10-11T15:34:21-07:00</updated>
+    <id>http://eMxyzptlk.github.io/blog/2014/10/11/migrating-emails-from-yahoo-smb&#8211;to-google-apps</id>
+    <content type="html"><![CDATA[<p>My friend asked me to help her migrate her emails from Yahoo SMB to Google Apps. Google Apps does offer importing emails from Yahoo (given the email is identified as hosted by Yahoo!), but the MX records has already been changed and the only option left was to import everything using POP which of course works mostly for the INBOX, and there are AFAIK absolutely no guarantees that all of the folders will be synced. I have not tried that myself.</p>
+
+<p>There are some services or applications from the Google Apps Market Place that offer importing emails, however they were asking for a bit more permissions that I feel comfortable giving them, besides, due to the nature of the emails she has I felt that it&rsquo;s better to keep third-party involvement to the bare minimum.</p>
+
+<p>I decided to go with a different approach, call it manual approach, using <a href="http://isync.sourceforge.net">iSync</a>. iSync (the command line is actually called <code>mbsync</code>) is a tool that will help you keep a local Maildir and a remote IMAP server in sync. It is up to you to decide which direction the sync should go and what folders are you looking to synchronize.</p>
+
+<p>To start, we need to write a few configuration files for mbsync, the first one is for pulling down the entire archive from the old provider (in this case Yahoo!)</p>
+
+<p>To keep yourself sane, create a new folder dedicated for the migration. I called mine <code>~/migration</code> and I kept everything I need for the migration in this folder.</p>
+
+<p>Create <code>~/migration/mbsync-from-yahoo</code> with the following content, change only the user and the password for now.</p>
+
+<pre><code>IMAPAccount yahoo
+Host imap.mail.yahoo.com
+User user@example.com
+Pass secret_password
+UseIMAPS yes
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore remote
+Account yahoo
+
+MaildirStore local
+Path /home/user/migration/mail/
+
+Channel yahoo
+Master :remote:
+Slave :local:
+Patterns * !"Bulk Mail"
+Create Slave
+Expunge None
+Sync Pull
+SyncState *
+</code></pre>
+
+<p>Now execute <code>mbsync --config ~/migration/mbsync-from-yahoo --list</code> and analyze the list of folders. For each folder that you do not wish to sync, add it within double quotes and preceded by a bang (i.e <code>!"Some folder"</code>) to the end of the line that starts with <code>Patterns</code>. The patterns define the pattern of the folders to sync, the <code>!</code> prefix is a negation. For more information on that, please check <code>man 1 mbsync</code>.</p>
+
+<p>Once done and have verified the list of folders, we need to start importing everything from Yahoo!. We normally only need to invoke <code>mbsync --config ~/migration/mbsync-from-yahoo --all</code> but Yahoo has a rate limit and it will eventually close the connection. Mbsync will stop the process and exit with an error. To help automate the process even more, let&rsquo;s catch the errors by checking the exit code and restart the process if it&rsquo;s greater than 0</p>
+
+<pre><code>while true; do mbsync --config ~/migration/mbsync-from-yahoo --all; if [[ $? -eq 0 ]]; then break; fi; done
+</code></pre>
+
+<p>It&rsquo;s time to go for a walk, coffee or whatever your pleasure is, it will take some time, it took me close to 8 hours to download 65K emails.</p>
+
+<p>&hellip; much later &hellip;</p>
+
+<p>To be able to synchronize (or push) the emails to Google Apps servers, we need to go through few simple modifications to the Maildir that we just created, but before going through the changes we need to create a backup of the Maildir. Do so with <code>tar czf mail.tar.gz mail</code>. Now let&rsquo;s modify the maildir:</p>
+
+<ul>
+<li>Remove all of the files left by mbsync <code>find ~/migration/mail -type f -name '.??*' -exec rm {} ';'</code></li>
+<li>Create a new bash script <code>~/migration/remove_ids.sh</code> with the following content and execute it</li>
+</ul>
+
+
+<pre><code>#!/bin/bash
+# This script removes the ID from the email file.
+
+set -ex
+
+cd ~/migration/mail
+for folder in *; do
+  echo "${folder}"
+  cd "${folder}"
+  for file in `find . -type f -name '*U=*'`; do
+    mv "${file}" "`echo $file | sed -e 's:,U=[0-9]*::g'`"
+  done
+  cd ..
+done
+</code></pre>
+
+<ul>
+<li>(Optional) If you&rsquo;d like to put everything under one label (using sub-labels) which would help you find all of the important emails later:</li>
+</ul>
+
+
+<pre><code>cd ~/migration/mail
+mkdir -p Yahoo/{cur,new,tmp}
+for i in *; do mv "${i}" "Yahoo/.${i}"; done
+</code></pre>
+
+<p>Do not worry about the error message &ldquo;Cannot move Yahoo to a subdirectory of itself&rdquo;, that is expected.</p>
+
+<p>Finally, it&rsquo;s time to send everything to Google Apps, now that we have everything set. Create the file <code>~/migration/mbsync-to-google-apps</code> with the following contents and don&rsquo;t forget to adjust the user-name and password field.</p>
+
+<pre><code>IMAPAccount googleapps
+Host imap.gmail.com
+User user@example.com
+Pass secret_password
+UseIMAPS yes
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore remote
+Account googleapps
+
+MaildirStore local
+Path /home/user/migration/mail/
+
+Channel googleapps
+Master :remote:
+Slave :local:
+Patterns *
+Create Master
+Expunge None
+Sync Push
+SyncState *
+</code></pre>
+
+<p>Now run the mbsync with the command:</p>
+
+<pre><code>while true; do mbsync --config ~/migration/mbsync-to-google-apps --all; if [[ $? -eq 0 ]]; then break; fi; done
+</code></pre>
+
+<p>Even though Google Apps will not rate-limit you, it&rsquo;s best to catch errors and restart without any manual intervention.</p>
+]]></content>
+  </entry>
+  
+</feed>
